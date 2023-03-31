@@ -8,7 +8,7 @@ ui <- fluidPage(
   mainPanel(
       plotOutput(outputId = "origPlot"),
       h4("Unlock your bucks by reconstructing our Tiff & Yves hybrid.
-      Hybrids are constructed by scrambling the first 30 eigenvectors of an SVD of original Tiff and Yves pics."),  
+      Hybrids can be constructed by scrambling the first 30 eigenvectors of an SVD of original Tiff and Yves pics using the slider."),  
       sliderInput(inputId = "seed",
                   label="",
                  min = 0,
