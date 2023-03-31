@@ -2,10 +2,29 @@
 server <- function(input, output) {
   library("ggmap")
   library("gridExtra")
+  
   plotFaceVector <- function(faceVector,nrow=192,ncol=168) {
     matrix(faceVector,nrow=nrow,ncol=ncol) %>%
       ggimage()
   }
+  
+  decimal2binary <- function (x, length) 
+  {
+    # CODE from GA package
+    x <- as.integer(x)
+    b <- if (missing(length)) 
+      NULL
+    else rep(0, length)
+    i <- 0
+    while (x >= 1) {
+      i <- i + 1
+      b[i] <- x%%2
+      x <- x%/%2
+    }
+    return(rev(b))
+  }
+
+# Construct SVDs of original images
 #  tiff <- read.bitmap("media/IMG_1638.jpeg")[,,1]
 #  yves <- read.bitmap("media/IMG_1637.jpeg")[,,1]
 #  yves <- yves[(1:641),(1:641)]
@@ -17,21 +36,32 @@ server <- function(input, output) {
 #  tiff <- tiff[,101:541]
 #  yvesSvd <- svd(yves)
 #  tiffSvd <- svd(tiff)
-   yvesSvd <- readRDS("media/yvesSvd.rds")
-   tiffSvd <- readRDS("media/tiffSvd.rds")
-  set.seed(11)
-  k <- 30
-  sY <- sample(k,k/2) %>% sort
-  sT <- (1:k)[-sY]
-  #sT <- c(sT,(k+1):30)
-  
+
+  yvesSvd <- readRDS("media/yvesSvd.rds")
+  tiffSvd <- readRDS("media/tiffSvd.rds")
+
+  # 30 eigenvectors selected using a binary number of length 30. 
+  # 1000 codes can are required. 
+  h <- as.integer(seq(10,1073741823,length.out=1001))
+
+  # Our Hybrid
+  code <- 409
+  # select eigenvectors Yves 
+  sY <- which(decimal2binary(h[code+1],length = 30)==1)
+  # select eigenvectors Tiff
+  sT <- (1:30)[-sY]
+  # picture Yves
   approxYvesToFind <- yvesSvd$u[,sY] %*%
     diag(yvesSvd$d[sY],ncol=length(sY)) %*%
     t(yvesSvd$v[,sY]) 
+  # picture Tiff
   approxTiffToFind <- tiffSvd$u[,sT] %*%
     diag(tiffSvd$d[sT],ncol=length(sT)) %*%
     t(tiffSvd$v[,sT]) 
+  # combined
   approxToFind <- approxTiffToFind+approxYvesToFind
+
+  #Make plots 
   plotToFind <- plotFaceVector(approxToFind,641,441)
   yvesOrig <- yvesSvd$u %*%diag(yvesSvd$d) %*%t(yvesSvd$v)
   tiffOrig <- tiffSvd$u %*%diag(tiffSvd$d) %*%t(tiffSvd$v)
@@ -39,15 +69,11 @@ server <- function(input, output) {
   tiffOrig <- plotFaceVector(c(tiffOrig),641,441)
   output$origPlot <-  renderPlot({grid.arrange(tiffOrig,plotToFind,yvesOrig,nrow=1)})
   output$searchPlot <- renderPlot({
-  #for (seed in 1:100)
+  
   {
-    #correct 211
-    set.seed(input$seedH*100+input$seedT*10+input$seedE-200)
-    k <- 30
-    sY <- sample(k,k/2) %>% sort
-    sT <- (1:k)[-sY]
-    #sT <- c(sT,(k+1):30)
-    
+    # make plots for trial code from slider
+    sY <- which(decimal2binary(h[input$seed+1],length = 30)==1)
+    sT <- (1:30)[-sY]
     approxYves <- yvesSvd$u[,sY] %*%
       diag(yvesSvd$d[sY],ncol=length(sY)) %*%
       t(yvesSvd$v[,sY]) 
@@ -55,10 +81,7 @@ server <- function(input, output) {
       diag(tiffSvd$d[sT],ncol=length(sT)) %*%
       t(tiffSvd$v[,sT]) 
     approxSam <- approxTiff+approxYves
-    #saveSam[seed,] <- approxSam
   }
-  #approxSam[approxSam < 0.2] <- 0
-  #approxSam[approxSam > .5] <- 1
   yvesPlot <- plotFaceVector(approxYves,641,441)
   tiffPlot <- plotFaceVector(approxTiff,641,441)
   samPlot <- plotFaceVector(approxSam,641,441)
