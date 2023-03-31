@@ -3,12 +3,12 @@ library(shiny)
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
   
-  titlePanel("Which Tiff & Yves hybrid unlocks your bucks!"),
+  titlePanel("Which Tiff & Yves hybrid unlocks your bucks?"),
   
   mainPanel(
       plotOutput(outputId = "origPlot"),
       h4("Unlock your bucks by reconstructing our Tiff & Yves hybrid.
-      Hybrids are constructed by scrambling the first 30 eigenvectors of an SVD on the original Tiff and Yves pics."),  
+      Hybrids are constructed by scrambling the first 30 eigenvectors of an SVD of original Tiff and Yves pics."),  
       sliderInput(inputId = "seed",
                   label="",
                  min = 0,
