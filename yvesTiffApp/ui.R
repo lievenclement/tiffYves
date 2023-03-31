@@ -7,14 +7,14 @@ ui <- fluidPage(
   
   mainPanel(
       plotOutput(outputId = "origPlot"),
-      h6("Unlock your bucks by reconstructing our Tiff & Yves hybrid.
-      Hybrids are constructed by recombining the first 30 eigenvectors of an SVD on the original Tiff and Yves pics."),  
-
+      h4("Unlock your bucks by reconstructing our Tiff & Yves hybrid.
+      Hybrids are constructed by scrambling the first 30 eigenvectors of an SVD on the original Tiff and Yves pics."),  
       sliderInput(inputId = "seed",
                   label="",
                  min = 0,
                  max = 999,
                  value = 0, step=1),
+      span(textOutput("printCode"), style = "color:#428bca; font-size:15px; font-family:arial"),
       actionButton("minus", "-"),
       actionButton("plus", "+"),
       plotOutput(outputId = "searchPlot"),

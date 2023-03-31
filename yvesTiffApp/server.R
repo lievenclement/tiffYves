@@ -8,6 +8,38 @@ server <- function(input, output, session) {
       ggimage()
   }
   
+  arrowR <- ggplot() +
+    geom_segment(aes(x=5, y=0, xend=8, yend=0), arrow = arrow(length=unit(.5, 'cm'))) +
+    ylim(-2,2)+
+    theme(axis.line = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          legend.position = "none",
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          plot.background = element_blank())
+  arrowL <- ggplot() +
+    geom_segment(aes(x=8, y=0, xend=5, yend=0), arrow = arrow(length=unit(.5, 'cm'))) +
+    ylim(-2,2)+
+    theme(axis.line = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          legend.position = "none",
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          plot.background = element_blank())
+  arrowLQ <- arrowL + annotate("text", x=6.5, y=0.2, label= "?")
+  arrowRQ <- arrowR + annotate("text", x=6.5, y=0.2, label= "?")
   decimal2binary <- function (x, length) 
   {
     # CODE from GA package
@@ -67,7 +99,14 @@ server <- function(input, output, session) {
   tiffOrig <- tiffSvd$u %*%diag(tiffSvd$d) %*%t(tiffSvd$v)
   yvesOrig <- plotFaceVector(c(yvesOrig),641,441)
   tiffOrig <- plotFaceVector(c(tiffOrig),641,441)
-  output$origPlot <-  renderPlot({grid.arrange(tiffOrig,plotToFind,yvesOrig,nrow=1)})
+  output$origPlot <-  renderPlot({
+    grid.arrange(tiffOrig,
+                 arrowRQ,
+                 plotToFind,
+                 arrowLQ,
+                 yvesOrig,
+                 layout_matrix = matrix(c(1,1,1,2,2,3,3,3,4,4,5,5,5),nrow=1)
+                 )})
   observeEvent(input$minus, {
     updateSliderInput(session,"seed", value = input$seed - 1)
   })
@@ -92,6 +131,27 @@ server <- function(input, output, session) {
   yvesPlot <- plotFaceVector(approxYves,641,441)
   tiffPlot <- plotFaceVector(approxTiff,641,441)
   samPlot <- plotFaceVector(approxSam,641,441)
-  grid.arrange(tiffPlot,samPlot,yvesPlot,nrow=1)
+  grid.arrange(
+    tiffPlot,
+    arrowR,
+    samPlot,
+    arrowL,
+    yvesPlot,
+    layout_matrix = matrix(c(1,1,1,2,2,3,3,3,4,4,5,5,5),nrow=1)
+    )
+  output$printCode <- renderText({     
+    paste0("YOUR CODE: 0", 
+           ifelse(input$seed>99,
+                  input$seed,
+                  ifelse(input$seed>9,
+                         paste0("0",input$seed),
+                         paste0("00",input$seed)
+                         )
+                  )
+    )
+
+  })
   })
 }
+
+
