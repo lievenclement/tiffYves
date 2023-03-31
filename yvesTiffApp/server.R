@@ -8,38 +8,6 @@ server <- function(input, output, session) {
       ggimage()
   }
   
-  arrowR <- ggplot() +
-    geom_segment(aes(x=5, y=0, xend=8, yend=0), arrow = arrow(length=unit(.5, 'cm'))) +
-    ylim(-2,2)+
-    theme(axis.line = element_blank(),
-          axis.text.x = element_blank(),
-          axis.text.y = element_blank(),
-          axis.ticks = element_blank(),
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(),
-          legend.position = "none",
-          panel.background = element_blank(),
-          panel.border = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          plot.background = element_blank())
-  arrowL <- ggplot() +
-    geom_segment(aes(x=8, y=0, xend=5, yend=0), arrow = arrow(length=unit(.5, 'cm'))) +
-    ylim(-2,2)+
-    theme(axis.line = element_blank(),
-          axis.text.x = element_blank(),
-          axis.text.y = element_blank(),
-          axis.ticks = element_blank(),
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(),
-          legend.position = "none",
-          panel.background = element_blank(),
-          panel.border = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          plot.background = element_blank())
-  arrowLQ <- arrowL + annotate("text", x=6.5, y=0.2, label= "?")
-  arrowRQ <- arrowR + annotate("text", x=6.5, y=0.2, label= "?")
   decimal2binary <- function (x, length) 
   {
     # CODE from GA package
@@ -82,11 +50,14 @@ server <- function(input, output, session) {
   sY <- which(decimal2binary(h[code+2],length = 30)==1)
   # select eigenvectors Tiff
   sT <- (1:30)[-sY]
+  
   # picture Yves
+  yvesOrig <- yvesSvd$u %*%diag(yvesSvd$d) %*%t(yvesSvd$v)
   approxYvesToFind <- yvesSvd$u[,sY] %*%
     diag(yvesSvd$d[sY],ncol=length(sY)) %*%
     t(yvesSvd$v[,sY]) 
   # picture Tiff
+  tiffOrig <- tiffSvd$u %*%diag(tiffSvd$d) %*%t(tiffSvd$v)
   approxTiffToFind <- tiffSvd$u[,sT] %*%
     diag(tiffSvd$d[sT],ncol=length(sT)) %*%
     t(tiffSvd$v[,sT]) 
@@ -94,38 +65,24 @@ server <- function(input, output, session) {
   approxToFind <- approxTiffToFind+approxYvesToFind
 
   #Make plots 
-  plotToFind <- plotFaceVector(approxToFind,641,441)
-  yvesOrig <- yvesSvd$u %*%diag(yvesSvd$d) %*%t(yvesSvd$v)
-  tiffOrig <- tiffSvd$u %*%diag(tiffSvd$d) %*%t(tiffSvd$v)
-  yvesOrig <- plotFaceVector(c(yvesOrig),641,441)
-  tiffOrig <- plotFaceVector(c(tiffOrig),641,441)
-  output$yvesOrig <-  renderPlot({yvesOrig})
-  output$tiffOrig <-  renderPlot({tiffOrig})
-  output$plotToFind <- renderPlot({plotToFind})
-  
-  #output$origPlot <-  renderPlot({
-  #  grid.arrange(
-  #               tiffOrig,
-  #               #arrowRQ,
-  #               plotToFind,
-  #               #arrowLQ,
-  #               #yvesOrig,
-  #               nrow=1
-  #               #layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
-  #               )
-  #  #},
-  #  #height = function() {
-  #  #               if (session$clientData$output_origPlot_width <= 1000) {
-  #  #                 200
-  #  #               } else { "auto" }
-  #               })
+  output$yvesOrig <-  renderPlot({
+    plotFaceVector(c(yvesOrig),641,441)
+  })
+  output$tiffOrig <-  renderPlot({
+    plotFaceVector(c(tiffOrig),641,441)
+  })
+  output$plotToFind <- renderPlot({
+    plotFaceVector(approxToFind,641,441)
+  })
+
   observeEvent(input$minus, {
     updateSliderInput(session,"seed", value = input$seed - 1)
   })
   
   observeEvent(input$plus, {
     updateSliderInput(session,"seed", value = input$seed + 1)
-  })  
+  })
+  
   output$approxYves <- renderPlot({
     sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
     approxYves <- yvesSvd$u[,sY] %*%
@@ -133,6 +90,7 @@ server <- function(input, output, session) {
       t(yvesSvd$v[,sY]) 
     plotFaceVector(approxYves,641,441)
     })
+  
   output$approxTiff <- renderPlot({
     sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
     sT <- (1:30)[-sY]
@@ -141,6 +99,7 @@ server <- function(input, output, session) {
       t(tiffSvd$v[,sT]) 
     plotFaceVector(approxTiff,641,441)
   })
+  
   output$approxSam <- renderPlot({
     sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
     approxYves <- yvesSvd$u[,sY] %*%
@@ -154,38 +113,6 @@ server <- function(input, output, session) {
     plotFaceVector(approxTiff+approxYves,641,441)
   })
   
-  
-  # output$searchPlot <- renderPlot({
-  # 
-  #   # make plots for trial code from slider
-  #   sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
-  #   sT <- (1:30)[-sY]
-  #   approxYves <- yvesSvd$u[,sY] %*%
-  #     diag(yvesSvd$d[sY],ncol=length(sY)) %*%
-  #     t(yvesSvd$v[,sY]) 
-  #   approxTiff <- tiffSvd$u[,sT] %*%
-  #     diag(tiffSvd$d[sT],ncol=length(sT)) %*%
-  #     t(tiffSvd$v[,sT]) 
-  #   approxSam <- approxTiff+approxYves
-  # 
-  # yvesPlot <- plotFaceVector(approxYves,641,441)
-  # tiffPlot <- plotFaceVector(approxTiff,641,441)
-  # samPlot <- plotFaceVector(approxSam,641,441)
-  # grid.arrange(
-  #   tiffPlot,
-  #   #arrowR,
-  #   samPlot,
-  #   #arrowL,
-  #   #yvesPlot,
-  #   nrow=1
-  # #  #layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
-  #   )
-  # #}, 
-  # #height = function() {
-  # #  if (session$clientData$output_searchPlot_width <= 1000) {
-  # #    200
-  # #  } else { "auto" }
-  # })
   output$printCode <- renderText({     
     paste0("YOUR CODE: 0", 
            ifelse(input$seed>99,

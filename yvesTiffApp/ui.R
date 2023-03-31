@@ -19,7 +19,7 @@ ui <- fluidPage(
                 max = 999,
                 value = 0, step=1),
     splitLayout(
-      cellWidths = c("10%","10%","80%"),
+      cellWidths = c("12%","12%","80%"),
       actionButton("minus", "-"),
       actionButton("plus", "+"),
       span(textOutput("printCode"), style = "color:#428bca; font-size:15px; font-family:arial")
