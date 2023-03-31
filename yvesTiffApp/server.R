@@ -105,7 +105,7 @@ server <- function(input, output, session) {
                  plotToFind,
                  arrowLQ,
                  yvesOrig,
-                 layout_matrix = matrix(c(1,1,1,2,2,3,3,3,4,4,5,5,5),nrow=1)
+                 layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
                  )})
   observeEvent(input$minus, {
     updateSliderInput(session,"seed", value = input$seed - 1)
@@ -137,7 +137,7 @@ server <- function(input, output, session) {
     samPlot,
     arrowL,
     yvesPlot,
-    layout_matrix = matrix(c(1,1,1,2,2,3,3,3,4,4,5,5,5),nrow=1)
+    layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
     )
   output$printCode <- renderText({     
     paste0("YOUR CODE: 0", 
