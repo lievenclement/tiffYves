@@ -107,7 +107,12 @@ server <- function(input, output, session) {
                  yvesOrig,
                  #nrow=1
                  layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
-                 )})
+                 )},
+    height = function() {
+                   if (session$clientData$output_origPlot_width <= 1000) {
+                     100
+                   } else { "auto" }
+                 })
   observeEvent(input$minus, {
     updateSliderInput(session,"seed", value = input$seed - 1)
   })
@@ -117,7 +122,7 @@ server <- function(input, output, session) {
   })  
   
   output$searchPlot <- renderPlot({
-  {
+  
     # make plots for trial code from slider
     sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
     sT <- (1:30)[-sY]
@@ -128,7 +133,7 @@ server <- function(input, output, session) {
       diag(tiffSvd$d[sT],ncol=length(sT)) %*%
       t(tiffSvd$v[,sT]) 
     approxSam <- approxTiff+approxYves
-  }
+  
   yvesPlot <- plotFaceVector(approxYves,641,441)
   tiffPlot <- plotFaceVector(approxTiff,641,441)
   samPlot <- plotFaceVector(approxSam,641,441)
@@ -153,6 +158,11 @@ server <- function(input, output, session) {
     )
 
   })
+  }, 
+  height = function() {
+    if (session$clientData$output_searchPlot_width <= 1000) {
+      100
+    } else { "auto" }
   })
 }
 
