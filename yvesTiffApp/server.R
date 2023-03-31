@@ -1,5 +1,5 @@
 # Define server logic required to draw a histogram ----
-server <- function(input, output) {
+server <- function(input, output, session) {
   library("ggmap")
   library("gridExtra")
   
@@ -68,8 +68,15 @@ server <- function(input, output) {
   yvesOrig <- plotFaceVector(c(yvesOrig),641,441)
   tiffOrig <- plotFaceVector(c(tiffOrig),641,441)
   output$origPlot <-  renderPlot({grid.arrange(tiffOrig,plotToFind,yvesOrig,nrow=1)})
-  output$searchPlot <- renderPlot({
+  observeEvent(input$minus, {
+    updateSliderInput(session,"seed", value = input$seed - 1)
+  })
   
+  observeEvent(input$plus, {
+    updateSliderInput(session,"seed", value = input$seed + 1)
+  })  
+  
+  output$searchPlot <- renderPlot({
   {
     # make plots for trial code from slider
     sY <- which(decimal2binary(h[input$seed+1],length = 30)==1)
