@@ -135,7 +135,7 @@ server <- function(input, output, session) {
   })
   
   output$printCode <- renderText({     
-    paste0("On the left our hybrid, on the right your hybrid with CODE: 0", 
+    paste0("On the left OUR HYBRID, on the right YOUR HYBRID with CODE: 0", 
            ifelse(input$seed>99,
                   input$seed,
                   ifelse(input$seed>9,

@@ -5,14 +5,14 @@ ui <- fluidPage(
   
   titlePanel("Which Tiff & Yves hybrid unlocks your bucks?"),
   
-  fluidRow(
+  mainPanel(width=12,
     splitLayout(
       plotOutput("tiffOrig"),
       plotOutput("plotToFind"),
       plotOutput("yvesOrig")
       ),
     h4("Unlock your bucks by reconstructing our Tiff & Yves hybrid.
-      Hybrids can be constructed by scrambling the first 30 eigenvectors of an SVD of original Tiff and Yves pics using the slider."),  
+      Hybrids can be constructed by scrambling the first 30 eigenvectors of an SVD of original Tiff & Yves pics using the slider."),  
     br(),
     
     sliderInput(inputId = "seed",
