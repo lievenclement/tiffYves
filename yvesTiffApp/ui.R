@@ -32,7 +32,7 @@ ui <- fluidPage(
       plotOutput("approxYves")    
       ),
 
-    h4("hybrid facedown"),  
+    h4("hybrid showdown"),  
     br(),
     
     splitLayout(
