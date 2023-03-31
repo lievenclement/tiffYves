@@ -13,17 +13,19 @@ ui <- fluidPage(
       ),
     h4("Unlock your bucks by reconstructing our Tiff & Yves hybrid.
       Hybrids can be constructed by scrambling the first 30 eigenvectors of an SVD of original Tiff and Yves pics using the slider."),  
+    br(),
+    span(textOutput("printCode"), style = "color:#428bca; font-size:15px; font-family:arial"),
+    
     sliderInput(inputId = "seed",
                 label="",
                 min = 0,
                 max = 999,
                 value = 0, step=1),
-    splitLayout(
-      cellWidths = c("12%","12%","80%"),
-      actionButton("minus", "-"),
-      actionButton("plus", "+"),
-      span(textOutput("printCode"), style = "color:#428bca; font-size:15px; font-family:arial")
-    ),
+
+    actionButton("minus", "-"),
+    actionButton("plus", "+"),
+    br(),
+    
     splitLayout(
       plotOutput("approxTiff"),
       plotOutput("approxSam"),
