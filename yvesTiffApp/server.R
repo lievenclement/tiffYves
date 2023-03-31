@@ -56,11 +56,13 @@ server <- function(input, output, session) {
   approxYvesToFind <- yvesSvd$u[,sY] %*%
     diag(yvesSvd$d[sY],ncol=length(sY)) %*%
     t(yvesSvd$v[,sY]) 
+  
   # picture Tiff
   tiffOrig <- tiffSvd$u %*%diag(tiffSvd$d) %*%t(tiffSvd$v)
   approxTiffToFind <- tiffSvd$u[,sT] %*%
     diag(tiffSvd$d[sT],ncol=length(sT)) %*%
     t(tiffSvd$v[,sT]) 
+  
   # combined
   approxToFind <- approxTiffToFind+approxYvesToFind
 
@@ -85,32 +87,35 @@ server <- function(input, output, session) {
   
   output$approxYves <- renderPlot({
     sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
-    approxYves <- yvesSvd$u[,sY] %*%
+    approxYvesTest <- yvesSvd$u[,sY] %*%
       diag(yvesSvd$d[sY],ncol=length(sY)) %*%
       t(yvesSvd$v[,sY]) 
-    plotFaceVector(approxYves,641,441)
+    plotFaceVector(approxYvesTest,641,441)
     })
+  
   
   output$approxTiff <- renderPlot({
     sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
     sT <- (1:30)[-sY]
-    approxTiff <- tiffSvd$u[,sT] %*%
+    approxTiffTest <- tiffSvd$u[,sT] %*%
       diag(tiffSvd$d[sT],ncol=length(sT)) %*%
       t(tiffSvd$v[,sT]) 
-    plotFaceVector(approxTiff,641,441)
+    plotFaceVector(approxTiffTest,641,441)
   })
+  
+ 
   
   output$approxSam <- renderPlot({
     sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
-    approxYves <- yvesSvd$u[,sY] %*%
+    approxYvesTest <- yvesSvd$u[,sY] %*%
       diag(yvesSvd$d[sY],ncol=length(sY)) %*%
       t(yvesSvd$v[,sY]) 
     
     sT <- (1:30)[-sY]
-    approxTiff <- tiffSvd$u[,sT] %*%
+    approxTiffTest <- tiffSvd$u[,sT] %*%
       diag(tiffSvd$d[sT],ncol=length(sT)) %*%
       t(tiffSvd$v[,sT]) 
-    plotFaceVector(approxTiff+approxYves,641,441)
+    plotFaceVector(approxTiffTest + approxYvesTest,641,441)
   })
   
   output$printCode <- renderText({     
