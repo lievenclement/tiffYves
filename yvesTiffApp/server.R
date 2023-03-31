@@ -99,20 +99,26 @@ server <- function(input, output, session) {
   tiffOrig <- tiffSvd$u %*%diag(tiffSvd$d) %*%t(tiffSvd$v)
   yvesOrig <- plotFaceVector(c(yvesOrig),641,441)
   tiffOrig <- plotFaceVector(c(tiffOrig),641,441)
-  output$origPlot <-  renderPlot({
-    grid.arrange(tiffOrig,
-                 arrowRQ,
-                 plotToFind,
-                 arrowLQ,
-                 yvesOrig,
-                 #nrow=1
-                 layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
-                 )},
-    height = function() {
-                   if (session$clientData$output_origPlot_width <= 1000) {
-                     100
-                   } else { "auto" }
-                 })
+  output$yvesOrig <-  renderPlot({yvesOrig})
+  output$tiffOrig <-  renderPlot({tiffOrig})
+  output$plotToFind <- renderPlot({plotToFind})
+  
+  #output$origPlot <-  renderPlot({
+  #  grid.arrange(
+  #               tiffOrig,
+  #               #arrowRQ,
+  #               plotToFind,
+  #               #arrowLQ,
+  #               #yvesOrig,
+  #               nrow=1
+  #               #layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
+  #               )
+  #  #},
+  #  #height = function() {
+  #  #               if (session$clientData$output_origPlot_width <= 1000) {
+  #  #                 200
+  #  #               } else { "auto" }
+  #               })
   observeEvent(input$minus, {
     updateSliderInput(session,"seed", value = input$seed - 1)
   })
@@ -120,32 +126,66 @@ server <- function(input, output, session) {
   observeEvent(input$plus, {
     updateSliderInput(session,"seed", value = input$seed + 1)
   })  
-  
-  output$searchPlot <- renderPlot({
-  
-    # make plots for trial code from slider
+  output$approxYves <- renderPlot({
     sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
-    sT <- (1:30)[-sY]
     approxYves <- yvesSvd$u[,sY] %*%
       diag(yvesSvd$d[sY],ncol=length(sY)) %*%
       t(yvesSvd$v[,sY]) 
+    plotFaceVector(approxYves,641,441)
+    })
+  output$approxTiff <- renderPlot({
+    sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
+    sT <- (1:30)[-sY]
     approxTiff <- tiffSvd$u[,sT] %*%
       diag(tiffSvd$d[sT],ncol=length(sT)) %*%
       t(tiffSvd$v[,sT]) 
-    approxSam <- approxTiff+approxYves
+    plotFaceVector(approxTiff,641,441)
+  })
+  output$approxSam <- renderPlot({
+    sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
+    approxYves <- yvesSvd$u[,sY] %*%
+      diag(yvesSvd$d[sY],ncol=length(sY)) %*%
+      t(yvesSvd$v[,sY]) 
+    
+    sT <- (1:30)[-sY]
+    approxTiff <- tiffSvd$u[,sT] %*%
+      diag(tiffSvd$d[sT],ncol=length(sT)) %*%
+      t(tiffSvd$v[,sT]) 
+    plotFaceVector(approxTiff+approxYves,641,441)
+  })
   
-  yvesPlot <- plotFaceVector(approxYves,641,441)
-  tiffPlot <- plotFaceVector(approxTiff,641,441)
-  samPlot <- plotFaceVector(approxSam,641,441)
-  grid.arrange(
-    tiffPlot,
-    arrowR,
-    samPlot,
-    arrowL,
-    yvesPlot,
-    #nrow=1
-    layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
-    )
+  
+  # output$searchPlot <- renderPlot({
+  # 
+  #   # make plots for trial code from slider
+  #   sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
+  #   sT <- (1:30)[-sY]
+  #   approxYves <- yvesSvd$u[,sY] %*%
+  #     diag(yvesSvd$d[sY],ncol=length(sY)) %*%
+  #     t(yvesSvd$v[,sY]) 
+  #   approxTiff <- tiffSvd$u[,sT] %*%
+  #     diag(tiffSvd$d[sT],ncol=length(sT)) %*%
+  #     t(tiffSvd$v[,sT]) 
+  #   approxSam <- approxTiff+approxYves
+  # 
+  # yvesPlot <- plotFaceVector(approxYves,641,441)
+  # tiffPlot <- plotFaceVector(approxTiff,641,441)
+  # samPlot <- plotFaceVector(approxSam,641,441)
+  # grid.arrange(
+  #   tiffPlot,
+  #   #arrowR,
+  #   samPlot,
+  #   #arrowL,
+  #   #yvesPlot,
+  #   nrow=1
+  # #  #layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
+  #   )
+  # #}, 
+  # #height = function() {
+  # #  if (session$clientData$output_searchPlot_width <= 1000) {
+  # #    200
+  # #  } else { "auto" }
+  # })
   output$printCode <- renderText({     
     paste0("YOUR CODE: 0", 
            ifelse(input$seed>99,
@@ -153,16 +193,9 @@ server <- function(input, output, session) {
                   ifelse(input$seed>9,
                          paste0("0",input$seed),
                          paste0("00",input$seed)
-                         )
                   )
+           )
     )
-
-  })
-  }, 
-  height = function() {
-    if (session$clientData$output_searchPlot_width <= 1000) {
-      100
-    } else { "auto" }
   })
 }
 
