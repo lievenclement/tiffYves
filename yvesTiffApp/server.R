@@ -37,12 +37,12 @@ server <- function(input, output) {
   tiffOrig <- tiffSvd$u %*%diag(tiffSvd$d) %*%t(tiffSvd$v)
   yvesOrig <- plotFaceVector(c(yvesOrig),641,441)
   tiffOrig <- plotFaceVector(c(tiffOrig),641,441)
-
   output$origPlot <-  renderPlot({grid.arrange(tiffOrig,plotToFind,yvesOrig,nrow=1)})
   output$searchPlot <- renderPlot({
   #for (seed in 1:100)
   {
-    set.seed(input$seed)
+    #correct 211
+    set.seed(input$seedH*100+input$seedT*10+input$seedE-200)
     k <- 30
     sY <- sample(k,k/2) %>% sort
     sT <- (1:k)[-sY]

@@ -13,11 +13,26 @@ ui <- fluidPage(
     sidebarPanel(
       
       # Input: Slider for the number of bins ----
-      sliderInput(inputId = "seed",
+      #sliderInput(inputId = "seed",
+      #            label = "Change the seed to generate a new plot:",
+      #            min = 1,
+      #            max = 999,
+      #            value = 397),
+      sliderInput(inputId = "seedH",
                   label = "Change the seed to generate a new plot:",
-                  min = 1,
-                  max = 999,
-                  value = 397)
+                  min = 0,
+                  max = 9,
+                  value = 3, step = 1),
+      sliderInput(inputId = "seedT",
+                  label = "",
+                  min = 0,
+                  max = 9,
+                  value = 5, step = 1),
+      sliderInput(inputId = "seedE",
+                  label = "",
+                  min = 0,
+                  max = 9,
+                  value = 7, step = 1)
       
     ),
     
