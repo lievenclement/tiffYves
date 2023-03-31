@@ -42,12 +42,12 @@ server <- function(input, output, session) {
 
   # 30 eigenvectors selected using a binary number of length 30. 
   # 1000 codes can are required. 
-  h <- as.integer(seq(10,1073741823,length.out=1001))
+  h <- as.integer(seq(0,1073741823,length.out=1002))
 
   # Our Hybrid
   code <- 409
   # select eigenvectors Yves 
-  sY <- which(decimal2binary(h[code+1],length = 30)==1)
+  sY <- which(decimal2binary(h[code+2],length = 30)==1)
   # select eigenvectors Tiff
   sT <- (1:30)[-sY]
   # picture Yves
@@ -79,7 +79,7 @@ server <- function(input, output, session) {
   output$searchPlot <- renderPlot({
   {
     # make plots for trial code from slider
-    sY <- which(decimal2binary(h[input$seed+1],length = 30)==1)
+    sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
     sT <- (1:30)[-sY]
     approxYves <- yvesSvd$u[,sY] %*%
       diag(yvesSvd$d[sY],ncol=length(sY)) %*%
