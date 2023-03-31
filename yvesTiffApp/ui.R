@@ -22,7 +22,7 @@ ui <- fluidPage(
                   label = "Change the seed to generate a new plot:",
                   min = 0,
                   max = 9,
-                  value = 3, step = 1),
+                  value = 5, step = 1),
       sliderInput(inputId = "seedT",
                   label = "",
                   min = 0,
@@ -32,7 +32,7 @@ ui <- fluidPage(
                   label = "",
                   min = 0,
                   max = 9,
-                  value = 7, step = 1)
+                  value = 5, step = 1)
       
     ),
     
