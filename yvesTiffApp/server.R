@@ -105,6 +105,7 @@ server <- function(input, output, session) {
                  plotToFind,
                  arrowLQ,
                  yvesOrig,
+                 #nrow=1
                  layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
                  )})
   observeEvent(input$minus, {
@@ -137,6 +138,7 @@ server <- function(input, output, session) {
     samPlot,
     arrowL,
     yvesPlot,
+    #nrow=1
     layout_matrix = matrix(c(1,1,1,2,3,3,3,4,5,5,5),nrow=1)
     )
   output$printCode <- renderText({     
