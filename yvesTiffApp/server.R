@@ -76,6 +76,9 @@ server <- function(input, output, session) {
   output$plotToFind <- renderPlot({
     plotFaceVector(approxToFind,641,441)
   })
+  output$plotToFindComp <- renderPlot({
+    plotFaceVector(approxToFind,641,441)
+  })
 
   observeEvent(input$minus, {
     updateSliderInput(session,"seed", value = input$seed - 1)
@@ -106,6 +109,19 @@ server <- function(input, output, session) {
  
   
   output$approxSam <- renderPlot({
+    sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
+    approxYvesTest <- yvesSvd$u[,sY] %*%
+      diag(yvesSvd$d[sY],ncol=length(sY)) %*%
+      t(yvesSvd$v[,sY]) 
+    
+    sT <- (1:30)[-sY]
+    approxTiffTest <- tiffSvd$u[,sT] %*%
+      diag(tiffSvd$d[sT],ncol=length(sT)) %*%
+      t(tiffSvd$v[,sT]) 
+    plotFaceVector(approxTiffTest + approxYvesTest,641,441)
+  })
+
+  output$approxSamComp <- renderPlot({
     sY <- which(decimal2binary(h[input$seed+2],length = 30)==1)
     approxYvesTest <- yvesSvd$u[,sY] %*%
       diag(yvesSvd$d[sY],ncol=length(sY)) %*%
