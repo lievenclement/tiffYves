@@ -42,9 +42,9 @@ ui <- fluidPage(
            img(src='VIH_keyguardjpeg.jpeg', width="10%", height="10%", align = "left"),
            span(textOutput("printCode"), 
                 style ="font-size:15px; font-family:arial"),
-           br())
+           br()),
     ),
-    
+  fluidRow(br()),  
   fluidRow(
     splitLayout(
       plotOutput("plotToFindComp"),
