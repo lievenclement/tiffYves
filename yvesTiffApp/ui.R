@@ -14,8 +14,8 @@ ui <- fluidPage(
   fluidRow(
     column(width=1),
     column(width=10,
-    h4("Unlock your bucks by reconstructing our Tiff & Yves hybrid.
-      Hybrids can be constructed by scrambling the first 30 eigenvectors of an SVD of original Tiff & Yves pics using the slider."),  
+    h4("Unlock your bucks by reconstructing our VIH (Very Important Hybrid).
+      You can construct your own hybrids with the slider!"),  
     br(),
     
     sliderInput(inputId = "seed",
