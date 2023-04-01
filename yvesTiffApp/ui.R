@@ -3,7 +3,7 @@ library(shiny)
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
   
-  titlePanel("Yves' & Tiff's hybrid breeding programme to unlock your bucks!"),
+  titlePanel("Yves' & Tiff's  in-silico hybrid breeding programme to unlock your bucks!"),
   
   fluidRow(
     splitLayout(
@@ -52,7 +52,7 @@ ui <- fluidPage(
   fluidRow(
     column(width=1),
     column(width=10,  
-           h6("Yves Gabriëls holds the copyright on the stock-images of the newly-weds on who we had to rely to breed our VIH and to provide our hybrid breeding progamme. The rds files and images of newly-bred hybrids are not allowed to be redistributed without permission of the copyright holder.")
+           h6("Yves Gabriëls holds the copyright on the stock-images of the newly-weds on who we had to rely for breeding VIH and to set-up our  in-silico hybrid breeding progamme. The rds files and images of newly-bred hybrids are not allowed to be redistributed without permission of the copyright holder.")
            )
   )
 )
