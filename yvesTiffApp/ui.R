@@ -39,6 +39,7 @@ ui <- fluidPage(
     column(width=1),
     column(width=10,    
            h4("Hybrid showdown"),
+           img(src='VIH_keyguardjpeg.jpeg', width="10%", height="10%", align = "left"),
            span(textOutput("printCode"), 
                 style ="font-size:15px; font-family:arial"),
            br())
@@ -47,7 +48,7 @@ ui <- fluidPage(
   fluidRow(
     splitLayout(
       plotOutput("plotToFindComp"),
-      plotOutput("approxSamComp")    
+      plotOutput("approxSamComp"),
       )),
   fluidRow(
     column(width=1),
