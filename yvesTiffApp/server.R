@@ -45,9 +45,10 @@ server <- function(input, output, session) {
   h <- as.integer(seq(0,1073741823,length.out=1002))
 
   # Our Hybrid
-  code <- 409
+  code <- c(0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1)
+  
   # select eigenvectors Yves 
-  sY <- which(decimal2binary(h[code+2],length = 30)==1)
+  sY <- which(code==1)
   # select eigenvectors Tiff
   sT <- (1:30)[-sY]
   
